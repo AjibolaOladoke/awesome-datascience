@@ -1,0 +1,23 @@
+name: Check Markdown links
+on:
+  workflow_dispatch:    
+jobs:
+  links:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run markdown link checker action
+        id: link_check
+        uses: academic/link-checker@v1
+        with:
+          report-file: link-check-results.md
+          fail-on-issue: "true"
+
+      - name: Upload report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: markdown-link-check-report
+          path: ${{ steps.link_check.outputs.report-file }}
